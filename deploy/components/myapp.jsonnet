@@ -1,72 +1,69 @@
 
 local p = import '../params.libsonnet';
-local params = p.components.hello;
+local params = p.components.myapp;
 
 [
   {
     apiVersion: 'v1',
-    kind: 'ConfigMap',
-    metadata: {
-      name: 'myapp-config',
-    },
-    data: {
-      'index.html': params.indexData,
-    },
-  },
-
-  {
-    apiVersion: 'v1',
     kind: 'Service',
     metadata: {
-      name: 'myapp-config',
+      name: params.name,
     },
-    data: {
-      'index.html': params.indexData,
-    },
+    spec: 
+    {
+      ports: [
+        {
+          name: 'web',
+          targetPort: params.servicePort,
+          port: 80,
+        },
+      ],
+      selector: {
+        app: params.name
+      },
+    }
   },
 
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: 'myapp-deploy',
+      name: params.name,
       labels: {
-        app: 'myapp-deploy',
+        app: params.name,
       },
     },
     spec: {
       replicas: params.replicas,
       selector: {
         matchLabels: {
-          app: 'myapp-deploy',
+          app: params.name,
         },
       },
       template: {
         metadata: {
           labels: {
-            app: 'myapp-deploy',
+            app: params.name,
           },
         },
         spec: {
           containers: [
             {
-              name: 'main',
-              image: 'nginx:stable',
+              name: 'myapp',
+              image: params.image + ':' + params.imageTag,
               imagePullPolicy: 'Always',
-              volumeMounts: [
-                {
-                  name: 'web',
-                  mountPath: '/usr/share/nginx/html',
+              imagePullSecrets: [
+                { 
+                  name: 'registry.gitlab.com',
                 },
               ],
-            },
-          ],
-          volumes: [
-            {
-              name: 'web',
-              configMap: {
-                name: 'myapp-config',
+   
+              ports: [
+              {
+                containerPort: params.containerPort,
+                protocol: 'TCP'
               },
+              ],
             },
           ],
         },

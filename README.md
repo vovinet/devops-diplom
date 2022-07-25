@@ -49,51 +49,60 @@ ResourceExhausted desc = Quota limit vpc.externalStaticAddresses.count exceeded
 cp1                        : ok=748  changed=142  unreachable=0    failed=0    skipped=1247 rescued=0    ignored=9   
 localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 node1                      : ok=474  changed=87   unreachable=0    failed=0    skipped=729  rescued=0    ignored=2   
+node2                      : ok=474  changed=87   unreachable=0    failed=0    skipped=729  rescued=0    ignored=2   
+node3                      : ok=474  changed=87   unreachable=0    failed=0    skipped=729  rescued=0    ignored=2   
 
-Суббота 23 июля 2022  22:38:07 +0300 (0:00:00.063)       0:18:29.217 ********** 
+Понедельник 25 июля 2022  16:27:56 +0300 (0:00:00.106)       0:17:00.223 ****** 
 =============================================================================== 
-kubernetes-apps/ansible : Kubernetes Apps | Start Resources ----------------------------------------------------------------------------------------------------------------------------------------- 43.07s
-kubernetes/kubeadm : Join to cluster ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 34.11s
-kubernetes/preinstall : Install packages requirements ----------------------------------------------------------------------------------------------------------------------------------------------- 32.90s
-kubernetes/control-plane : kubeadm | Initialize first master ---------------------------------------------------------------------------------------------------------------------------------------- 29.64s
-kubernetes/preinstall : Preinstall | wait for the apiserver to be running --------------------------------------------------------------------------------------------------------------------------- 29.18s
-download : download_file | Validate mirrors --------------------------------------------------------------------------------------------------------------------------------------------------------- 28.96s
-kubernetes-apps/ansible : Kubernetes Apps | Lay Down CoreDNS templates ------------------------------------------------------------------------------------------------------------------------------ 23.05s
-network_plugin/calico : Calico | Create calico manifests -------------------------------------------------------------------------------------------------------------------------------------------- 16.19s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 14.81s
-kubernetes-apps/ansible : Kubernetes Apps | Lay Down nodelocaldns Template -------------------------------------------------------------------------------------------------------------------------- 14.13s
-network_plugin/calico : Start Calico resources ------------------------------------------------------------------------------------------------------------------------------------------------------ 14.07s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 12.60s
-kubernetes/preinstall : Update package management cache (APT) --------------------------------------------------------------------------------------------------------------------------------------- 11.49s
-download : check_pull_required |  Generate a list of information about the images on a node --------------------------------------------------------------------------------------------------------- 10.77s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 9.99s
-etcd : reload etcd ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 9.09s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.17s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.10s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 7.89s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 7.21s
+kubernetes/preinstall : Install packages requirements ----------------------------------------------------------------------------------------------------------------------------------------------- 36.75s
+kubernetes/kubeadm : Join to cluster ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 34.06s
+kubernetes/preinstall : Preinstall | wait for the apiserver to be running --------------------------------------------------------------------------------------------------------------------------- 31.65s
+kubernetes/control-plane : kubeadm | Initialize first master ---------------------------------------------------------------------------------------------------------------------------------------- 29.46s
+download : download_file | Validate mirrors --------------------------------------------------------------------------------------------------------------------------------------------------------- 26.54s
+kubernetes-apps/ansible : Kubernetes Apps | Start Resources ----------------------------------------------------------------------------------------------------------------------------------------- 16.37s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 15.18s
+kubernetes-apps/ansible : Kubernetes Apps | Lay Down CoreDNS templates ------------------------------------------------------------------------------------------------------------------------------ 14.53s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 14.00s
+network_plugin/calico : Wait for calico kubeconfig to be created ------------------------------------------------------------------------------------------------------------------------------------ 13.91s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 12.77s
+kubernetes/preinstall : Update package management cache (APT) --------------------------------------------------------------------------------------------------------------------------------------- 11.55s
+network_plugin/calico : Calico | Create calico manifests --------------------------------------------------------------------------------------------------------------------------------------------- 8.55s
+network_plugin/calico : Start Calico resources ------------------------------------------------------------------------------------------------------------------------------------------------------- 8.54s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.48s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.11s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.08s
+container-engine/containerd : containerd | Unpack containerd archive --------------------------------------------------------------------------------------------------------------------------------- 7.02s
+etcd : reload etcd ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 6.06s
+etcd : Configure | Check if etcd cluster is healthy -------------------------------------------------------------------------------------------------------------------------------------------------- 5.92s
+
 ```
 
 После копирования и редиктирования конфига подключимся к кластеру с локальной машины:
 ```
-$ kubectl cluster-info 
-Kubernetes control plane is running at https://51.250.90.61:6443
+zubarev_va@A000995:~/git/kubespray$ kubectl cluster-info 
+Kubernetes control plane is running at https://51.250.90.108:6443
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-$ kubectl get po -A -o wide
-NAMESPACE     NAME                              READY   STATUS    RESTARTS      AGE   IP             NODE    NOMINATED NODE   READINESS GATES
-kube-system   calico-node-b7bqc                 1/1     Running   0             15h   10.0.0.11      node1   <none>           <none>
-kube-system   calico-node-f7nzq                 1/1     Running   0             15h   10.0.0.10      cp1     <none>           <none>
-kube-system   coredns-666959ff67-bng7h          1/1     Running   0             15h   10.233.110.1   cp1     <none>           <none>
-kube-system   coredns-666959ff67-jh6lx          1/1     Running   0             15h   10.233.90.1    node1   <none>           <none>
-kube-system   dns-autoscaler-59b8867c86-5dlxq   1/1     Running   0             15h   10.233.110.2   cp1     <none>           <none>
-kube-system   kube-apiserver-cp1                1/1     Running   2 (15h ago)   15h   10.0.0.10      cp1     <none>           <none>
-kube-system   kube-controller-manager-cp1       1/1     Running   2 (15h ago)   15h   10.0.0.10      cp1     <none>           <none>
-kube-system   kube-proxy-7cpbp                  1/1     Running   0             15h   10.0.0.10      cp1     <none>           <none>
-kube-system   kube-proxy-djjr4                  1/1     Running   0             15h   10.0.0.11      node1   <none>           <none>
-kube-system   kube-scheduler-cp1                1/1     Running   2 (15h ago)   15h   10.0.0.10      cp1     <none>           <none>
-kube-system   nodelocaldns-6cpqr                1/1     Running   0             15h   10.0.0.11      node1   <none>           <none>
-kube-system   nodelocaldns-g7gjw                1/1     Running   0             15h   10.0.0.10      cp1     <none>           <none>
+zubarev_va@A000995:~/git/kubespray$ kubectl get po -A -o wide
+NAMESPACE     NAME                              READY   STATUS    RESTARTS        AGE   IP             NODE    NOMINATED NODE   READINESS GATES
+kube-system   calico-node-75jww                 1/1     Running   0               11m   10.0.0.13      node3   <none>           <none>
+kube-system   calico-node-ftdl8                 1/1     Running   0               11m   10.0.0.10      cp1     <none>           <none>
+kube-system   calico-node-qtcqc                 1/1     Running   0               11m   10.0.0.12      node2   <none>           <none>
+kube-system   calico-node-sjhws                 1/1     Running   0               11m   10.0.0.11      node1   <none>           <none>
+kube-system   coredns-666959ff67-bcw84          1/1     Running   0               10m   10.233.110.1   cp1     <none>           <none>
+kube-system   coredns-666959ff67-s89fc          1/1     Running   0               10m   10.233.92.1    node3   <none>           <none>
+kube-system   dns-autoscaler-59b8867c86-jcddg   1/1     Running   0               10m   10.233.110.2   cp1     <none>           <none>
+kube-system   kube-apiserver-cp1                1/1     Running   2 (9m16s ago)   13m   10.0.0.10      cp1     <none>           <none>
+kube-system   kube-controller-manager-cp1       1/1     Running   2 (9m5s ago)    13m   10.0.0.10      cp1     <none>           <none>
+kube-system   kube-proxy-8q2gt                  1/1     Running   0               13m   10.0.0.10      cp1     <none>           <none>
+kube-system   kube-proxy-mdfx7                  1/1     Running   0               12m   10.0.0.13      node3   <none>           <none>
+kube-system   kube-proxy-rbkdx                  1/1     Running   0               12m   10.0.0.12      node2   <none>           <none>
+kube-system   kube-proxy-sb5pq                  1/1     Running   0               12m   10.0.0.11      node1   <none>           <none>
+kube-system   kube-scheduler-cp1                1/1     Running   2 (9m7s ago)    13m   10.0.0.10      cp1     <none>           <none>
+kube-system   nodelocaldns-7tmt4                1/1     Running   0               10m   10.0.0.11      node1   <none>           <none>
+kube-system   nodelocaldns-gppsc                1/1     Running   0               10m   10.0.0.12      node2   <none>           <none>
+kube-system   nodelocaldns-rb4gv                1/1     Running   0               10m   10.0.0.10      cp1     <none>           <none>
+kube-system   nodelocaldns-zv27l                1/1     Running   0               10m   10.0.0.13      node3   <none>           <none>
 ```
 
 ### 3. Создание тестового приложения
@@ -266,6 +275,21 @@ prometheus-operator-6486d45dc7-bhqqd   2/2     Running   0          3m45s   10.2
 $ POD=$(kubectl get pods --namespace=monitoring | grep grafana| cut -d ' ' -f 1)
 $ kubectl port-forward $POD --namespace=monitoring 3000:3000
 ```
+Стандартный логин пароль — admin / admin, затем пароль изменен на текущее название группы
+![pic4-1](img/4-1.png)
+
 ### 5. Установка и настройка CI/CD
+
+Создаём Namespace'ы:
+```
+$ kubectl create namespace stage
+namespace/stage created
+$ kubectl create namespace prod
+namespace/prod created
+
+```
+
+Добавляем регистр образов:
+kubectl create secret docker-registry regcred --docker-server=registry.gitlab.com --docker-username=k8s --docker-password=glpat-JVFqQnJ4edyoSAtZsi3z
 
 Приложение упаковано в qbec, манифесты расположены в [каталоге](deploy/)

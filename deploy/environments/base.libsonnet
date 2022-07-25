@@ -6,6 +6,7 @@
       name: 'myapp',
       image: 'registry.gitlab.com/vovinet/docker-app:latest',
       replicas: 1,
+      imageTag: 'latest',
       containerPort: 80,
       servicePort: 80,
       nodeSelector: {},
