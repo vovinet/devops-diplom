@@ -54,7 +54,7 @@ local params = p.components.myapp;
               imagePullPolicy: 'Always',
               imagePullSecrets: [
                 { 
-                  name: 'registry.gitlab.com',
+                  name: 'gitlab-secret',
                 },
               ],
    

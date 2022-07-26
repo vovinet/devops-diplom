@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-app-qs1
+  name: my-app-qs1
+  namespace: stage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app-qs1
+  template:
+    metadata:
+      labels:
+        app: my-app-qs1
+    spec:
+      containers:
+      - name: my-app-qs1-container
+        image: registry.gitlab.com/vovinet/docker-app:latest
+      imagePullSecrets:
+      - name: gitlab-secret
