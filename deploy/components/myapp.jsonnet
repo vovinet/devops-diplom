@@ -52,11 +52,7 @@ local params = p.components.myapp;
               name: 'myapp',
               image: params.image + ':' + params.imageTag,
               imagePullPolicy: 'Always',
-              imagePullSecrets: [
-                { 
-                  name: 'gitlab-secret',
-                },
-              ],
+              
    
               ports: [
               {
@@ -65,6 +61,11 @@ local params = p.components.myapp;
                 protocol: 'TCP'
               },
               ],
+            },
+          ],
+          imagePullSecrets: [
+            { 
+              name: 'gitlab-secret',
             },
           ],
         },
