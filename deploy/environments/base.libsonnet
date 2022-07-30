@@ -4,15 +4,13 @@
   components: {
     myapp: {
       name: 'myapp',
-      image: 'registry.gitlab.com/vovinet/docker-app:latest',
+      image: 'registry.gitlab.com/vovinet/docker-app',
       replicas: 1,
       imageTag: 'latest',
-      containerPort: 80,
-      servicePort: 80,
+      targetPort: 80,
+      hostPort: 8081,
+      port: 8080,
       nodeSelector: {},
-      tolerations: [],
-      ingressClass: 'nginx',
-      domain: 'myapp.zubarev.su',
     },
   },
 }

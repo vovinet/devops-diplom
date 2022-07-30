@@ -14,8 +14,8 @@ local params = p.components.myapp;
       ports: [
         {
           name: 'web',
-          targetPort: params.servicePort,
-          port: 80,
+          targetPort: params.targetPort,
+          port: params.port,
         },
       ],
       selector: {
@@ -60,7 +60,8 @@ local params = p.components.myapp;
    
               ports: [
               {
-                containerPort: params.containerPort,
+                containerPort: params.targetPort,
+                hostPort: params.hostPort,
                 protocol: 'TCP'
               },
               ],
