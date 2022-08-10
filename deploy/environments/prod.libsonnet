@@ -4,7 +4,7 @@ local base = import './base.libsonnet';
 
 base {
   components +: {
-    hello +: {
+    myapp +: {
       replicas: 3,
     },
   }

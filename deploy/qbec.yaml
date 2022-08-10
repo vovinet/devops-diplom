@@ -6,7 +6,8 @@ spec:
   environments:
     stage:
       defaultNamespace: stage
-      server: https://51.250.90.108:6443
+      server: https://51.250.2.8:6443
+      #server: https://51.250.104.116
     prod:
       defaultNamespace: prod  
       server: https://51.250.90.61:6443

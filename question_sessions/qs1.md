@@ -104,3 +104,62 @@ zubarev_va@A000995:~/git/devops-diplom$ kubectl -n stage get po
 No resources found in stage namespace.
 ```
 пока тупик...
+
+```
+$ kubectl get deployment myapp -o yaml  -n stage
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    qbec.io/component: myapp
+    qbec.io/last-applied: H4sIAAAAAAAA/2yQsW4yMRCE+/8xpvbPhQ65i5IyxRVRmohiMSuwsL2OvbnohPzukQ+BUES5ntn5Zn0GZf/BpXpJsKCc6zCtYXDyaQ+LV85B5shJYRBZaU9KsGdQSqKkXlLt49eO3crL4CRmSd1uEWfKGc0g0I7DYusPV8Hclijn4N0S9kDlNPkiKV5Cq9KBe2iiyPeQmtl1ROElrMKuDSoHdiqlC5HUHd8eVmnNQDnmQMqL9e7Qx+XbHdFJUvKJS4X9PMPH3tCi8MFXLfPq4DXQbuUkDpNMPrEOe3EnLv8pZ9uZtf/usjd+hzBK8G6GxXP4obniz60GWYpeWDf0KEVhN08GR6l6nTZrg1xExUmAxfvLiLZt29Za+/cLAAD//wEAAP//3sGPZvoBAAA=
+  creationTimestamp: "2022-07-30T20:30:30Z"
+  deletionGracePeriodSeconds: 0
+  deletionTimestamp: "2022-07-31T09:01:18Z"
+  finalizers:
+  - foregroundDeletion
+  generation: 2
+  labels:
+    app: myapp
+    qbec.io/application: myapp
+    qbec.io/environment: stage
+  name: myapp
+  namespace: stage
+  resourceVersion: "153639"
+  uid: 5157a747-d83c-4798-858d-0066d80397e8
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: myapp
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - image: registry.gitlab.com/vovinet/docker-app:latest
+        imagePullPolicy: Always
+        name: myapp
+        ports:
+        - containerPort: 80
+          hostPort: 8081
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
+```

@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    qbec.io/component: myapp
+  labels:
+    app: myapp
+    qbec.io/application: myapp
+    qbec.io/environment: stage
+  name: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - image: registry.gitlab.com/vovinet/docker-app:latest
+        imagePullPolicy: Always
+        name: myapp
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    qbec.io/component: myapp
+  labels:
+    qbec.io/application: myapp
+    qbec.io/environment: stage
+  name: myapp
+spec:
+  ports:
+  - name: web
+    nodePort: 30101
+    port: 80
+  selector:
+    app: myapp
+  type: NodePort

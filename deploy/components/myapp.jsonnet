@@ -11,15 +11,16 @@ local params = p.components.myapp;
     },
     spec: 
     {
+      type: 'NodePort',
       ports: [
         {
           name: 'web',
-          targetPort: params.targetPort,
+          nodePort: params.nodePort,
           port: params.port,
         },
       ],
       selector: {
-        app: params.name
+        app: params.name,
       },
     }
   },
@@ -57,17 +58,16 @@ local params = p.components.myapp;
               ports: [
               {
                 containerPort: params.targetPort,
-                hostPort: params.hostPort,
                 protocol: 'TCP'
               },
               ],
             },
           ],
-          imagePullSecrets: [
-            { 
-              name: 'gitlab-secret',
-            },
-          ],
+          // imagePullSecrets: [
+          //   { 
+          //     name: 'gitlab-secret',
+          //   },
+          // ],
         },
       },
     },

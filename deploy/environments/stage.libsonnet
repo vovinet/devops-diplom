@@ -5,7 +5,7 @@ local base = import './base.libsonnet';
 base {
   components +: {
     myapp +: {
-      domain: 'myapp-stage.zubarev.su',
+      replicas: 1,
     },
   }
 }
