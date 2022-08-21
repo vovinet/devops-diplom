@@ -15,7 +15,6 @@
  - применен метод представления "инфраструктура как код". [Репозиторий](https://github.com/vovinet/infra-ft-cloud) с описанием инфраструктуры.
  - управление инфраструктурой реализовано посредством [terraform cloud](https://app.terraform.io/app/vovinet-netology/workspaces)
  - настроено автоматическое планирование и применение изменений по коммиту в репозиторий.
- - 
 
 Скриншоты Terrafom Cloud:
 ![pic1-1](img/1-1.png)
@@ -26,7 +25,7 @@
 
 Успешный статус таже видно в [репозитории](https://github.com/vovinet/infra-ft-cloud) на GitHub.
 
-Работа с облаком производится посредством создания сервисной учётно записи c ролью compute.admin, создание keyfile и назначение на калог для размещения ресурсов:
+Работа с облаком производится посредством создания сервисной учётной записи c ролью compute.admin, создание iam token и назначение на калог для размещения ресурсов:
 yc iam key create --service-account-name stage-sa
 
 Обновить IAM-токен (действует до 12 часов): ```yc iam create-token```
@@ -45,64 +44,65 @@ ResourceExhausted desc = Quota limit vpc.externalStaticAddresses.count exceeded
  - Kubernetes-кластер развернут с помощью [kubespray](https://github.com/kubernetes-sigs/kubespray). Использованные [инвентари](conf/kubespray/)
 
  ```
- PLAY RECAP **************************************************************************************************************************************************************************************************
+PLAY RECAP **************************************************************************************************************************************************************************************************
 cp1                        : ok=748  changed=142  unreachable=0    failed=0    skipped=1247 rescued=0    ignored=9   
 localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 node1                      : ok=474  changed=87   unreachable=0    failed=0    skipped=729  rescued=0    ignored=2   
 node2                      : ok=474  changed=87   unreachable=0    failed=0    skipped=729  rescued=0    ignored=2   
 node3                      : ok=474  changed=87   unreachable=0    failed=0    skipped=729  rescued=0    ignored=2   
 
-Понедельник 25 июля 2022  16:27:56 +0300 (0:00:00.106)       0:17:00.223 ****** 
+Воскресенье 21 августа 2022  13:04:08 +0300 (0:00:00.084)       0:17:31.543 *** 
 =============================================================================== 
-kubernetes/preinstall : Install packages requirements ----------------------------------------------------------------------------------------------------------------------------------------------- 36.75s
-kubernetes/kubeadm : Join to cluster ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 34.06s
-kubernetes/preinstall : Preinstall | wait for the apiserver to be running --------------------------------------------------------------------------------------------------------------------------- 31.65s
-kubernetes/control-plane : kubeadm | Initialize first master ---------------------------------------------------------------------------------------------------------------------------------------- 29.46s
-download : download_file | Validate mirrors --------------------------------------------------------------------------------------------------------------------------------------------------------- 26.54s
-kubernetes-apps/ansible : Kubernetes Apps | Start Resources ----------------------------------------------------------------------------------------------------------------------------------------- 16.37s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 15.18s
-kubernetes-apps/ansible : Kubernetes Apps | Lay Down CoreDNS templates ------------------------------------------------------------------------------------------------------------------------------ 14.53s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 14.00s
-network_plugin/calico : Wait for calico kubeconfig to be created ------------------------------------------------------------------------------------------------------------------------------------ 13.91s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 12.77s
-kubernetes/preinstall : Update package management cache (APT) --------------------------------------------------------------------------------------------------------------------------------------- 11.55s
-network_plugin/calico : Calico | Create calico manifests --------------------------------------------------------------------------------------------------------------------------------------------- 8.55s
-network_plugin/calico : Start Calico resources ------------------------------------------------------------------------------------------------------------------------------------------------------- 8.54s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.48s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.11s
-download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.08s
-container-engine/containerd : containerd | Unpack containerd archive --------------------------------------------------------------------------------------------------------------------------------- 7.02s
-etcd : reload etcd ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 6.06s
-etcd : Configure | Check if etcd cluster is healthy -------------------------------------------------------------------------------------------------------------------------------------------------- 5.92s
+download : download_file | Validate mirrors --------------------------------------------------------------------------------------------------------------------------------------------------------- 42.57s
+kubernetes/kubeadm : Join to cluster ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 34.74s
+kubernetes/preinstall : Install packages requirements ----------------------------------------------------------------------------------------------------------------------------------------------- 32.46s
+kubernetes/control-plane : kubeadm | Initialize first master ---------------------------------------------------------------------------------------------------------------------------------------- 29.60s
+kubernetes-apps/ansible : Kubernetes Apps | Start Resources ----------------------------------------------------------------------------------------------------------------------------------------- 21.47s
+kubernetes-apps/ansible : Kubernetes Apps | Lay Down CoreDNS templates ------------------------------------------------------------------------------------------------------------------------------ 20.39s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 15.77s
+kubernetes/preinstall : Preinstall | wait for the apiserver to be running --------------------------------------------------------------------------------------------------------------------------- 15.28s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 13.73s
+network_plugin/calico : Calico | Create calico manifests -------------------------------------------------------------------------------------------------------------------------------------------- 12.39s
+network_plugin/calico : Wait for calico kubeconfig to be created ------------------------------------------------------------------------------------------------------------------------------------ 11.25s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------ 11.15s
+kubernetes/preinstall : Update package management cache (APT) --------------------------------------------------------------------------------------------------------------------------------------- 10.83s
+etcd : reload etcd ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 10.17s
+network_plugin/calico : Start Calico resources ------------------------------------------------------------------------------------------------------------------------------------------------------ 10.11s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 8.85s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 7.95s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 7.32s
+download : download_container | Download image if required ------------------------------------------------------------------------------------------------------------------------------------------- 7.30s
+container-engine/containerd : download_file | Download item ------------------------------------------------------------------------------------------------------------------------------------------ 6.55s
 
 ```
 
 После копирования и редиктирования конфига подключимся к кластеру с локальной машины:
 ```
-zubarev_va@A000995:~/git/kubespray$ kubectl cluster-info 
-Kubernetes control plane is running at https://51.250.90.108:6443
+$ kubectl cluster-info 
+Kubernetes control plane is running at https://51.250.2.8:6443
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-zubarev_va@A000995:~/git/kubespray$ kubectl get po -A -o wide
-NAMESPACE     NAME                              READY   STATUS    RESTARTS        AGE   IP             NODE    NOMINATED NODE   READINESS GATES
-kube-system   calico-node-75jww                 1/1     Running   0               11m   10.0.0.13      node3   <none>           <none>
-kube-system   calico-node-ftdl8                 1/1     Running   0               11m   10.0.0.10      cp1     <none>           <none>
-kube-system   calico-node-qtcqc                 1/1     Running   0               11m   10.0.0.12      node2   <none>           <none>
-kube-system   calico-node-sjhws                 1/1     Running   0               11m   10.0.0.11      node1   <none>           <none>
-kube-system   coredns-666959ff67-bcw84          1/1     Running   0               10m   10.233.110.1   cp1     <none>           <none>
-kube-system   coredns-666959ff67-s89fc          1/1     Running   0               10m   10.233.92.1    node3   <none>           <none>
-kube-system   dns-autoscaler-59b8867c86-jcddg   1/1     Running   0               10m   10.233.110.2   cp1     <none>           <none>
-kube-system   kube-apiserver-cp1                1/1     Running   2 (9m16s ago)   13m   10.0.0.10      cp1     <none>           <none>
-kube-system   kube-controller-manager-cp1       1/1     Running   2 (9m5s ago)    13m   10.0.0.10      cp1     <none>           <none>
-kube-system   kube-proxy-8q2gt                  1/1     Running   0               13m   10.0.0.10      cp1     <none>           <none>
-kube-system   kube-proxy-mdfx7                  1/1     Running   0               12m   10.0.0.13      node3   <none>           <none>
-kube-system   kube-proxy-rbkdx                  1/1     Running   0               12m   10.0.0.12      node2   <none>           <none>
-kube-system   kube-proxy-sb5pq                  1/1     Running   0               12m   10.0.0.11      node1   <none>           <none>
-kube-system   kube-scheduler-cp1                1/1     Running   2 (9m7s ago)    13m   10.0.0.10      cp1     <none>           <none>
-kube-system   nodelocaldns-7tmt4                1/1     Running   0               10m   10.0.0.11      node1   <none>           <none>
-kube-system   nodelocaldns-gppsc                1/1     Running   0               10m   10.0.0.12      node2   <none>           <none>
-kube-system   nodelocaldns-rb4gv                1/1     Running   0               10m   10.0.0.10      cp1     <none>           <none>
-kube-system   nodelocaldns-zv27l                1/1     Running   0               10m   10.0.0.13      node3   <none>           <none>
+
+$ kubectl get po -A -o wide
+NAMESPACE     NAME                              READY   STATUS    RESTARTS      AGE   IP             NODE    NOMINATED NODE   READINESS GATES
+kube-system   calico-node-2bmpm                 1/1     Running   0             12m   10.0.0.11      node1   <none>           <none>
+kube-system   calico-node-bml7z                 1/1     Running   0             12m   10.0.0.10      cp1     <none>           <none>
+kube-system   calico-node-dh7rv                 1/1     Running   0             12m   10.0.0.13      node3   <none>           <none>
+kube-system   calico-node-jvtcz                 1/1     Running   0             12m   10.0.0.12      node2   <none>           <none>
+kube-system   coredns-666959ff67-m7bzq          1/1     Running   0             11m   10.233.110.1   cp1     <none>           <none>
+kube-system   coredns-666959ff67-rtm25          1/1     Running   0             11m   10.233.90.1    node1   <none>           <none>
+kube-system   dns-autoscaler-59b8867c86-rwkqp   1/1     Running   0             11m   10.233.110.2   cp1     <none>           <none>
+kube-system   kube-apiserver-cp1                1/1     Running   1             14m   10.0.0.10      cp1     <none>           <none>
+kube-system   kube-controller-manager-cp1       1/1     Running   2 (10m ago)   14m   10.0.0.10      cp1     <none>           <none>
+kube-system   kube-proxy-2xkd9                  1/1     Running   0             13m   10.0.0.12      node2   <none>           <none>
+kube-system   kube-proxy-d6flt                  1/1     Running   0             13m   10.0.0.11      node1   <none>           <none>
+kube-system   kube-proxy-m2b84                  1/1     Running   0             14m   10.0.0.10      cp1     <none>           <none>
+kube-system   kube-proxy-xvqs2                  1/1     Running   0             13m   10.0.0.13      node3   <none>           <none>
+kube-system   kube-scheduler-cp1                1/1     Running   2 (10m ago)   14m   10.0.0.10      cp1     <none>           <none>
+kube-system   nodelocaldns-5vvhm                1/1     Running   0             10m   10.0.0.11      node1   <none>           <none>
+kube-system   nodelocaldns-85j7j                1/1     Running   0             10m   10.0.0.13      node3   <none>           <none>
+kube-system   nodelocaldns-87hpn                1/1     Running   0             10m   10.0.0.10      cp1     <none>           <none>
+kube-system   nodelocaldns-bl6gf                1/1     Running   0             10m   10.0.0.12      node2   <none>           <none>
 ```
 
 ### 3. Создание тестового приложения
@@ -278,6 +278,11 @@ $ kubectl port-forward $POD --namespace=monitoring 3000:3000
 Стандартный логин пароль — admin / admin, затем пароль изменен на текущее название группы
 ![pic4-1](img/4-1.png)
 
+Так как я использовал внешний балансировщик нагрузки, то мне стедует изменить тип сервиса на NodePort и изменить сетевую политику:
+```
+kubectl -n monitoring apply -f manifests/grafana-service.yml 
+```
+
 ### 5. Установка и настройка CI/CD
 
 Создаём Namespace'ы:
@@ -288,8 +293,79 @@ $ kubectl create namespace prod
 namespace/prod created
 
 ```
+Для реализации автоматического CD мне потребовался ещё один вспомогательный образ, с помощью которого я развёртывал приложение в кластер.
+Я написал следующий [Dockerfile](https://gitlab.com/vovinet/docker-app/-/blob/main/cd/Dockerfile)
 
-Добавляем регистр образов:
-kubectl create secret docker-registry regcred --docker-server=registry.gitlab.com --docker-username=k8s --docker-password=glpat-JVFqQnJ4edyoSAtZsi3z
+Собираем образ:
+```
+$ docker build -t docker-qbec .
+Sending build context to Docker daemon  2.048kB
+Step 1/4 : FROM alpine:latest
+ ---> 9c6f07244728
+Step 2/4 : RUN apk add curl bash
+ ---> Using cache
+ ---> 4287c10f6b1e
+Step 3/4 : RUN curl -L https://storage.googleapis.com/kubernetes-release/release/v1.24.2/bin/linux/amd64/kubectl -o /usr/bin/kubectl &&    chmod +x /usr/bin/kubectl
+ ---> Using cache
+ ---> d9bdafcabb8c
+Step 4/4 : RUN curl -SLq https://github.com/splunk/qbec/releases/download/v0.15.2/qbec-linux-amd64.tar.gz -o /tmp/qbec-linux-amd64.tar.gz &&    tar -xzf /tmp/qbec-linux-amd64.tar.gz -C /usr/bin
+ ---> Using cache
+ ---> c83b4cb41591
+Successfully built c83b4cb41591
+Successfully tagged docker-app:latest
+```
+Заливаем на докерхаб:
+```
+$ docker push vovinet/docker-qbec:latest
+The push refers to repository [docker.io/vovinet/docker-qbec]
+81fe3b530240: Layer already exists 
+2b05752ff4e2: Layer already exists 
+4df839816bc7: Layer already exists 
+994393dc58e7: Layer already exists 
+latest: digest: sha256:0660b249e2125dd6dffb2ce2e7f5d2e4fe96875ff7b85a28782571c616d7f9fe size: 1163
+```
 
-Приложение упаковано в qbec, манифесты расположены в [каталоге](deploy/)
+Добавляем этап деплоя в [gitlab-ci.yml](https://gitlab.com/vovinet/docker-app/-/blob/main/.gitlab-ci.yml)
+```
+deploy:
+  stage: deploy
+  image: vovinet/docker-qbec:latest
+  needs: 
+    - build
+  rules:
+    - if: $CI_COMMIT_TAG != ""
+  script:
+    - |
+        mkdir ~/.kube
+        cp $K8S_CONFIG ~/.kube/config
+        qbec apply stage --wait --yes --root deploy/
+
+```
+
+И не забываем примапить ключи для того, чтобы наш кластер был доступен изнутри образа:
+![5-1.png](img/5-1.png)
+
+
+Далее проверяем:
+Коммитим изменения в наше "приложение". Видим касоздаются задания по коммиту:
+![5-2.png](img/5-2.png)
+
+Резулитат:
+![5-3.png](img/5-3.png)
+![5-4.png](img/5-4.png)
+![5-5.png](img/5-5.png)
+
+
+Итог:
+
+Наше приложение доступно по адресу:
+http://myapp.stage.zubarev.su
+
+Скриншот:
+![6-1.png](img/6-1.png)
+
+Мониторинг доступен по адресу:
+http://graphics.zubarev.su
+
+Скриншот:
+![6-2.png](img/6-2.png)
