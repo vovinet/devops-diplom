@@ -23,7 +23,7 @@
 Скриншот Yandex.Cloud:
 ![pic1-3](img/1-3.png)
 
-Успешный статус таже видно в [репозитории](https://github.com/vovinet/infra-ft-cloud) на GitHub.
+Успешный статус применения таже видно в [репозитории](https://github.com/vovinet/infra-ft-cloud) на GitHub (аккаунт связан с Terraform Cloud).
 
 Работа с облаком производится посредством создания сервисной учётной записи c ролью compute.admin, создание iam token и назначение на калог для размещения ресурсов:
 yc iam key create --service-account-name stage-sa
